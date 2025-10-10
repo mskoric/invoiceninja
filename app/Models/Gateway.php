@@ -141,7 +141,7 @@ class Gateway extends StaticModel
                 ];
             case 15:
                 return [
-                    GatewayType::PAYPAL => ['refund' => false, 'token_billing' => false],
+                    GatewayType::PAYPAL => ['refund' => true, 'token_billing' => false],
                 ]; //Paypal
             case 20:
             case 56:
@@ -201,10 +201,10 @@ class Gateway extends StaticModel
                 ];
             case 60:
                 return [
-                    GatewayType::PAYPAL => ['refund' => false, 'token_billing' => false],
-                    GatewayType::CREDIT_CARD => ['refund' => false, 'token_billing' => false],
+                    GatewayType::PAYPAL => ['refund' => true, 'token_billing' => false],
+                    GatewayType::CREDIT_CARD => ['refund' => true, 'token_billing' => false],
                     GatewayType::VENMO => ['refund' => false, 'token_billing' => false],
-                    GatewayType::PAYPAL_ADVANCED_CARDS => ['refund' => false, 'token_billing' => true],
+                    GatewayType::PAYPAL_ADVANCED_CARDS => ['refund' => true, 'token_billing' => true],
                     // GatewayType::SEPA => ['refund' => false, 'token_billing' => false],
                     // GatewayType::BANCONTACT => ['refund' => false, 'token_billing' => false],
                     // GatewayType::EPS => ['refund' => false, 'token_billing' => false],
@@ -215,7 +215,7 @@ class Gateway extends StaticModel
                 ]; //Paypal
             case 61:
                 return [
-                    GatewayType::PAYPAL => ['refund' => false, 'token_billing' => false],
+                    GatewayType::PAYPAL => ['refund' => true, 'token_billing' => false],
                     GatewayType::CREDIT_CARD => ['refund' => false, 'token_billing' => false],
                     GatewayType::VENMO => ['refund' => false, 'token_billing' => false],
                     GatewayType::PAYPAL_ADVANCED_CARDS => ['refund' => false, 'token_billing' => true],

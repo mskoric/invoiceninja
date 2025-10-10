@@ -13,19 +13,21 @@
 namespace App\PaymentDrivers;
 
 use App\Models\Invoice;
+use App\Models\Payment;
 use App\Models\SystemLog;
-use App\Models\GatewayType;
+use Exception;
 use Illuminate\Support\Str;
 use App\Jobs\Util\SystemLogger;
 use App\Utils\Traits\MakesHash;
-use App\Exceptions\PaymentFailed;
 use App\Models\ClientGatewayToken;
 use App\Models\PaymentHash;
 use App\PaymentDrivers\PayPal\PayPalBasePaymentDriver;
 
+
 class PayPalRestPaymentDriver extends PayPalBasePaymentDriver
 {
     use MakesHash;
+    public $refundable = true;
 
     public const SYSTEM_LOG_TYPE = SystemLog::TYPE_PAYPAL;
 
@@ -443,5 +445,45 @@ class PayPalRestPaymentDriver extends PayPalBasePaymentDriver
         }
 
         return 'gateways.paypal.pay_livewire';
+    }
+
+    public function refund(Payment $payment, $amount, $return_client_response = false)
+    {
+        $response = null;
+
+        try {
+            // @var \Illuminate\Http\Client\Response $response
+            $response =  $this->gatewayRequest("/v2/payments/captures/{$payment->transaction_reference}/refund", 'post', ['body' => '']);
+
+            if ($response->getStatusCode() == 201) {
+                return [
+                    'transaction_reference' => '',
+                    'transaction_response' => json_encode($response),
+                    'success' => true,
+                    'description' => "Refund successful",
+                    'code' => $response,
+                ];
+            }
+
+            return [
+                'transaction_reference' => null,
+                'transaction_response' => json_encode($response),
+                'success' => false,
+                'description' => "Error",
+                'code' => $response->getStatusCode(),
+            ];
+        } catch (Exception $e) {
+            SystemLogger::dispatch(['server_response' => $response, 'data' => request()->all()], SystemLog::CATEGORY_GATEWAY_RESPONSE, SystemLog::EVENT_GATEWAY_FAILURE, SystemLog::TYPE_PAYPAL, $this->client, $this->client->company);
+
+            nlog($e->getMessage());
+
+            return [
+                'transaction_reference' => null,
+                'transaction_response' => json_encode($response),
+                'success' => false,
+                'description' => $e->getMessage(),
+                'code' => 422,
+            ];
+        }
     }
 }
