@@ -56,7 +56,7 @@ class StorePaymentRequest extends Request
             'number' => ['bail', 'nullable',  Rule::unique('payments')->where('company_id', $user->company()->id)],
             'idempotency_key' => ['nullable', 'bail', 'string','max:64', Rule::unique('payments')->where('company_id', $user->company()->id)],
             'date' => ['bail', 'nullable', 'sometimes', 'date:Y-m-d'],
-            'company_gateway_id' => ['sometimes','nullable','string']
+            'company_gateway_id' => ['sometimes','nullable']
         ];
 
         $rules['file'] = 'bail|sometimes|array';
@@ -161,8 +161,8 @@ class StorePaymentRequest extends Request
             unset($input['exchange_rate']);
         }
 
-        if (!empty($data['company_gateway_id']) && is_string($input['company_gateway_id'])) {
-            $input['company_gateway_id'] = $this->decodePrimaryKey($input['company_gateway_id']);
+        if (!empty($data['company_gateway_id'])) {
+            $input['company_gateway_id'] = intval($input['company_gateway_id']);
         }
 
         $this->replace($input);

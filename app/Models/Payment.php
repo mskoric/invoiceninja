@@ -174,7 +174,6 @@ class Payment extends BaseModel
         'meta' => 'object',
         'refund_meta' => 'array',
         'sync' => PaymentSync::class,
-        'company_gateway_id' => 'integer',
     ];
 
     protected $with = [
