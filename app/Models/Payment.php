@@ -161,6 +161,7 @@ class Payment extends BaseModel
         'custom_value4',
         'category_id',
         'idempotency_key',
+        'company_gateway_id',
     ];
 
     protected $casts = [
@@ -173,6 +174,7 @@ class Payment extends BaseModel
         'meta' => 'object',
         'refund_meta' => 'array',
         'sync' => PaymentSync::class,
+        'company_gateway_id' => 'integer',
     ];
 
     protected $with = [
@@ -225,7 +227,7 @@ class Payment extends BaseModel
     {
         return $this->hasMany(Activity::class)->where('company_id', $this->company_id)->take(50)->orderBy('id', 'desc');
     }
-    
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\MorphToMany
      */
