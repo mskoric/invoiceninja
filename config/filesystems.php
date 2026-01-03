@@ -42,7 +42,7 @@ return [
                 ],
                 'dir' => [
                     'public' => 0775,
-                    'private' => 0700,
+                    'private' => 0750,
                 ],
             ],
             'throw' => false,
@@ -58,7 +58,7 @@ return [
                 ],
                 'dir' => [
                     'public' => 0775,
-                    'private' => 0700,
+                    'private' => 0750,
                 ],
             ],
             'throw' => false,
